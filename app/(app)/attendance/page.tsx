@@ -145,7 +145,7 @@ export default function AttendancePage() {
           error: msg,
         }))
       },
-      { enableHighAccuracy: true, maximumAge: 300000, timeout: 45000 }
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
     )
     setWatchId(id)
   }, [])

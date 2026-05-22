@@ -20,6 +20,10 @@ CREATE TABLE IF NOT EXISTS locations (
 INSERT INTO locations (name, address, latitude, longitude, radius_meters)
 VALUES ('El Cementerio', 'El Cementerio, Caracas', 10.483875, -66.912834, 50);
 
+-- Sede: Las Mercedes
+INSERT INTO locations (name, address, latitude, longitude, radius_meters)
+VALUES ('Las Mercedes', 'Las Mercedes, Caracas', 10.478840, -66.858765, 50);
+
 -- ── 2. PERFILES DE EMPLEADOS ─────────────────────────────────
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,

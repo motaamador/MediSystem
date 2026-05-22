@@ -174,8 +174,8 @@ export default function Sidebar({ profile }: SidebarProps) {
           border-right: 1px solid var(--border-subtle);
           display: flex;
           flex-direction: column;
-          z-index: 100;
-          transition: width var(--transition-slow);
+          z-index: 200;
+          transition: width var(--transition-slow), transform var(--transition-slow);
           overflow: hidden;
         }
         .sidebar-collapsed {
