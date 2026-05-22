@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS locations (
 
 -- Sede inicial: El Cementerio
 INSERT INTO locations (name, address, latitude, longitude, radius_meters)
-VALUES ('El Cementerio', 'El Cementerio, Caracas', 10.48395, -66.91281, 50);
+VALUES ('El Cementerio', 'El Cementerio, Caracas', 10.483875, -66.912834, 50);
 
 -- ── 2. PERFILES DE EMPLEADOS ─────────────────────────────────
 CREATE TABLE IF NOT EXISTS profiles (

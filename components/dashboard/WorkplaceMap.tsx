@@ -14,8 +14,8 @@ L.Icon.Default.mergeOptions({
 })
 
 const MEDISYSTEM_HQ = {
-  lat: 10.48395,
-  lon: -66.91281,
+  lat: 10.483875,
+  lon: -66.912834,
   name: 'El Cementerio',
   radius: 50,
 }
