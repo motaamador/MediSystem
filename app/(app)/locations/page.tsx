@@ -36,7 +36,7 @@ const EMPTY_FORM: LocationForm = {
   address: '',
   latitude: 10.48395,
   longitude: -66.91281,
-  radius_meters: 50,
+  radius_meters: 75,
   is_active: true,
 }
 

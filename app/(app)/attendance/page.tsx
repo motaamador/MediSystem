@@ -57,7 +57,7 @@ export default function AttendancePage() {
     ? haversineDistance(gps.lat, gps.lon, selectedLocation.latitude, selectedLocation.longitude)
     : null
 
-  const isWithinRange = distance !== null && distance <= (selectedLocation?.radius_meters ?? 50)
+  const isWithinRange = distance !== null && distance <= (selectedLocation?.radius_meters ?? 75)
 
   // Load user & data
   useEffect(() => {
@@ -323,7 +323,7 @@ export default function AttendancePage() {
                 <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
                 <span>
                   Estás a <strong>{Math.round(distance)}m</strong> de la sede. Debes estar a menos de{' '}
-                  <strong>{selectedLocation?.radius_meters ?? 50}m</strong> para registrar tu asistencia.
+                  <strong>{selectedLocation?.radius_meters ?? 75}m</strong> para registrar tu asistencia.
                 </span>
               </div>
             )}

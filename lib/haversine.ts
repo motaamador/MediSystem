@@ -28,7 +28,7 @@ export function isWithinRadius(
   userLon: number,
   targetLat: number,
   targetLon: number,
-  radiusMeters: number = 50
+  radiusMeters: number = 75
 ): boolean {
   const distance = haversineDistance(userLat, userLon, targetLat, targetLon)
   return distance <= radiusMeters

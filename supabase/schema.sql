@@ -11,18 +11,18 @@ CREATE TABLE IF NOT EXISTS locations (
   address TEXT,
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
-  radius_meters INTEGER NOT NULL DEFAULT 50,
+  radius_meters INTEGER NOT NULL DEFAULT 75,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Sede inicial: El Cementerio
 INSERT INTO locations (name, address, latitude, longitude, radius_meters)
-VALUES ('El Cementerio', 'El Cementerio, Caracas', 10.483875, -66.912834, 50);
+VALUES ('El Cementerio', 'El Cementerio, Caracas', 10.483875, -66.912834, 75);
 
 -- Sede: Las Mercedes
 INSERT INTO locations (name, address, latitude, longitude, radius_meters)
-VALUES ('Las Mercedes', 'Las Mercedes, Caracas', 10.478840, -66.858765, 50);
+VALUES ('Las Mercedes', 'Las Mercedes, Caracas', 10.478840, -66.858765, 75);
 
 -- ── 2. PERFILES DE EMPLEADOS ─────────────────────────────────
 CREATE TABLE IF NOT EXISTS profiles (

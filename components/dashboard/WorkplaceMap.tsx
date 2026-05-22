@@ -17,7 +17,7 @@ const MEDISYSTEM_HQ = {
   lat: 10.483875,
   lon: -66.912834,
   name: 'El Cementerio',
-  radius: 50,
+  radius: 75,
 }
 
 interface WorkplaceMapProps {
@@ -39,7 +39,7 @@ export default function WorkplaceMap({ activeCount = 0 }: WorkplaceMapProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* 50m radius circle */}
+        {/* 75m radius circle */}
         <Circle
           center={[MEDISYSTEM_HQ.lat, MEDISYSTEM_HQ.lon]}
           radius={MEDISYSTEM_HQ.radius}
