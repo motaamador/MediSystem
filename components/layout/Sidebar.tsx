@@ -76,12 +76,7 @@ export default function Sidebar({ profile }: SidebarProps) {
           {!collapsed && (
             <div className="sidebar-brand">
               <div className="sidebar-logo-icon">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <path d="M6 11C6 11 9 7 12 10C15 13 12 15 14 15C16 15 14 18 16 16C18 14 16 19 18 21"
-                    stroke="#E8440A" strokeWidth="2.2" strokeLinecap="round"/>
-                  <path d="M10 22C10 22 13 18 15 18C17 18 15 15 17 14"
-                    stroke="#006D6D" strokeWidth="2.2" strokeLinecap="round"/>
-                </svg>
+                <img src="/logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </div>
               <div>
                 <span className="brand-medi">Medi</span>
@@ -91,12 +86,7 @@ export default function Sidebar({ profile }: SidebarProps) {
           )}
           {collapsed && (
             <div className="sidebar-logo-icon-only">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                <path d="M6 11C6 11 9 7 12 10C15 13 12 15 14 15C16 15 14 18 16 16C18 14 16 19 18 21"
-                  stroke="#E8440A" strokeWidth="2.2" strokeLinecap="round"/>
-                <path d="M10 22C10 22 13 18 15 18C17 18 15 15 17 14"
-                  stroke="#006D6D" strokeWidth="2.2" strokeLinecap="round"/>
-              </svg>
+              <img src="/logo.png" alt="Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
             </div>
           )}
           <button

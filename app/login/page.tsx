@@ -35,14 +35,7 @@ export default function LoginPage() {
       <div className="login-left">
         <div className="login-brand">
           <div className="login-logo">
-            {/* Logo SVG Medisystem */}
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <rect width="56" height="56" rx="16" fill="rgba(0,109,109,0.15)"/>
-              <path d="M14 20C14 20 18 14 22 18C26 22 22 26 26 26C30 26 26 30 30 28C34 26 30 34 34 38" 
-                stroke="#E8440A" strokeWidth="3" strokeLinecap="round"/>
-              <path d="M20 38C20 38 24 32 28 32C32 32 28 26 32 24" 
-                stroke="#006D6D" strokeWidth="3" strokeLinecap="round"/>
-            </svg>
+            <img src="/logo.png" alt="MediSystem Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
           <div>
             <h1 className="login-brand-name">
