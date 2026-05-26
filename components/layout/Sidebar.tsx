@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
@@ -75,8 +76,8 @@ export default function Sidebar({ profile }: SidebarProps) {
         <div className="sidebar-logo">
           {!collapsed && (
             <div className="sidebar-brand">
-              <div className="sidebar-logo-icon">
-                <img src="/logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <div className="sidebar-logo-icon" style={{ position: 'relative' }}>
+                <Image src="/logo.png" alt="Logo" fill style={{ objectFit: 'contain' }} priority />
               </div>
               <div>
                 <span className="brand-medi">Medi</span>
@@ -85,8 +86,8 @@ export default function Sidebar({ profile }: SidebarProps) {
             </div>
           )}
           {collapsed && (
-            <div className="sidebar-logo-icon-only">
-              <img src="/logo.png" alt="Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+            <div className="sidebar-logo-icon-only" style={{ position: 'relative' }}>
+              <Image src="/logo.png" alt="Logo" fill style={{ objectFit: 'contain' }} priority />
             </div>
           )}
           <button

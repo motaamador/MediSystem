@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
@@ -33,19 +34,6 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-left">
-        <div className="login-brand">
-          <div className="login-logo">
-            <img src="/logo.png" alt="MediSystem Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          </div>
-          <div>
-            <h1 className="login-brand-name">
-              <span style={{color: 'var(--orange-500)'}}>Medi</span>
-              <span style={{color: 'var(--teal-400)'}}>System</span>
-            </h1>
-            <p className="login-brand-sub">Control de Asistencia GPS</p>
-          </div>
-        </div>
-
         <div className="login-hero">
           <h2 className="login-hero-title">
             Gestiona la asistencia<br />
@@ -74,9 +62,20 @@ export default function LoginPage() {
 
       <div className="login-right">
         <div className="login-card">
-          <div className="login-card-header">
-            <h2 className="login-card-title">Iniciar sesión</h2>
-            <p className="login-card-sub">Ingresa tus credenciales para continuar</p>
+          <div className="login-card-header" style={{ textAlign: 'center' }}>
+            <div className="login-brand" style={{ justifyContent: 'center', marginBottom: '1.5rem' }}>
+              <div className="login-logo" style={{ position: 'relative', width: '56px', height: '56px' }}>
+                <Image src="/logo.png" alt="Icono" fill style={{ objectFit: 'contain' }} priority />
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h1 className="login-brand-name">
+                  <span style={{color: 'var(--orange-500)'}}>Medi</span>
+                  <span style={{color: 'var(--teal-400)'}}>System</span>
+                </h1>
+              </div>
+            </div>
+            <h2 className="login-card-title">Iniciar Sesión</h2>
+            <p className="login-card-sub">Ingresa con tus credenciales para acceder</p>
           </div>
 
           <form onSubmit={handleLogin} className="login-form">
