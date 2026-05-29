@@ -6,6 +6,8 @@ import { haversineDistance } from '@/lib/haversine'
 import {
   Location,
   AttendanceRecord,
+  Profile,
+  Shift,
   formatTime,
   formatDuration,
   getElapsedTime,
@@ -50,6 +52,7 @@ export default function AttendancePage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [elapsed, setElapsed] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
+  const [profile, setProfile] = useState<(Profile & { shift?: Shift | null }) | null>(null)
   const [watchId, setWatchId] = useState<number | null>(null)
 
   // Compute distance
@@ -65,6 +68,15 @@ export default function AttendancePage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
       setUserId(user.id)
+
+      // Load profile with shift
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*, shift:shifts(*)')
+        .eq('id', user.id)
+        .single()
+      
+      setProfile(profileData)
 
       // Load locations
       const { data: locs } = await supabase
@@ -162,6 +174,19 @@ export default function AttendancePage() {
     setLoading(true)
     setMessage(null)
 
+    let checkInStatus = 'on_time'
+    if (profile?.shift) {
+      const now = new Date()
+      const [h, m, s] = profile.shift.start_time.split(':').map(Number)
+      const startTime = new Date(now)
+      startTime.setHours(h, m, s || 0, 0)
+      
+      const diffMins = (now.getTime() - startTime.getTime()) / 60000
+      if (diffMins > 30) {
+        checkInStatus = 'late'
+      }
+    }
+
     const { data, error } = await supabase
       .from('attendance_records')
       .insert({
@@ -170,6 +195,7 @@ export default function AttendancePage() {
         check_in_lat: gps.lat,
         check_in_lon: gps.lon,
         status: 'active',
+        check_in_status: checkInStatus,
       })
       .select()
       .single()
@@ -189,12 +215,26 @@ export default function AttendancePage() {
     setLoading(true)
     setMessage(null)
 
+    let overtimeMins = 0
+    if (profile?.shift) {
+      const now = new Date()
+      const [h, m, s] = profile.shift.end_time.split(':').map(Number)
+      const endTime = new Date(now)
+      endTime.setHours(h, m, s || 0, 0)
+      
+      const diffMins = (now.getTime() - endTime.getTime()) / 60000
+      if (diffMins > 60) {
+        overtimeMins = Math.floor(diffMins)
+      }
+    }
+
     const { error } = await supabase
       .from('attendance_records')
       .update({
         check_out_time: new Date().toISOString(),
         check_out_lat: gps.lat,
         check_out_lon: gps.lon,
+        overtime_minutes: overtimeMins,
       })
       .eq('id', activeRecord.id)
 
@@ -214,6 +254,15 @@ export default function AttendancePage() {
     : gps.status === 'error' || gps.status === 'denied'
     ? 'var(--error)'
     : 'var(--text-muted)'
+
+  const isLate = (() => {
+    if (!profile?.shift) return false
+    const now = new Date()
+    const [h, m, s] = profile.shift.start_time.split(':').map(Number)
+    const startTime = new Date(now)
+    startTime.setHours(h, m, s || 0, 0)
+    return (now.getTime() - startTime.getTime()) / 60000 > 30
+  })()
 
   return (
     <div className="attendance-page">
@@ -363,6 +412,16 @@ export default function AttendancePage() {
               <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'}`}>
                 {message.type === 'success' ? <CheckCircle size={16} style={{ flexShrink: 0, marginTop: 2 }} /> : <XCircle size={16} style={{ flexShrink: 0, marginTop: 2 }} />}
                 <span>{message.text}</span>
+              </div>
+            )}
+
+            {/* Delay Warning */}
+            {!activeRecord && isLate && profile?.shift && (
+              <div className="alert alert-warning" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)' }}>
+                <AlertTriangle size={16} style={{ color: 'var(--warning)', flexShrink: 0, marginTop: 2 }} />
+                <span style={{ color: 'var(--warning)' }}>
+                  <strong>Aviso de Retardo:</strong> Tu hora de entrada era a las {profile.shift.start_time.slice(0, 5)} y han pasado más de 30 minutos. Tu asistencia se registrará como "Retardo", pero puedes proceder.
+                </span>
               </div>
             )}
 

@@ -12,6 +12,7 @@ export interface Profile {
   avatar_url: string | null
   phone: string | null
   is_active: boolean
+  shift_id: string | null
   created_at: string
   updated_at: string
 }
@@ -24,6 +25,14 @@ export interface Location {
   longitude: number
   radius_meters: number
   is_active: boolean
+  created_at: string
+}
+
+export interface Shift {
+  id: string
+  name: string
+  start_time: string
+  end_time: string
   created_at: string
 }
 

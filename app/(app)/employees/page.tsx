@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Profile, getInitials } from '@/lib/utils'
+import { Profile, Shift, getInitials } from '@/lib/utils'
 import {
   Users,
   Plus,
@@ -25,6 +25,7 @@ interface EmployeeForm {
   position: string
   phone: string
   role: 'employee' | 'admin'
+  shift_id: string
 }
 
 const EMPTY_FORM: EmployeeForm = {
@@ -36,6 +37,7 @@ const EMPTY_FORM: EmployeeForm = {
   position: '',
   phone: '',
   role: 'employee',
+  shift_id: '',
 }
 
 export default function EmployeesPage() {
@@ -47,6 +49,7 @@ export default function EmployeesPage() {
   const [showModal, setShowModal] = useState(false)
   const [editEmployee, setEditEmployee] = useState<Profile | null>(null)
   const [form, setForm] = useState<EmployeeForm>(EMPTY_FORM)
+  const [shifts, setShifts] = useState<Shift[]>([])
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -63,7 +66,20 @@ export default function EmployeesPage() {
     setLoading(false)
   }
 
-  useEffect(() => { loadEmployees() }, [])
+  const loadShifts = async () => {
+    const { data } = await supabase
+      .from('shifts')
+      .select('*')
+      .order('name')
+    if (data) {
+      setShifts(data)
+    }
+  }
+
+  useEffect(() => {
+    loadEmployees()
+    loadShifts()
+  }, [])
 
   // Filter
   useEffect(() => {
@@ -96,6 +112,7 @@ export default function EmployeesPage() {
       position: emp.position || '',
       phone: emp.phone || '',
       role: emp.role as 'employee' | 'admin',
+      shift_id: emp.shift_id || '',
     })
     setMessage(null)
     setShowModal(true)
@@ -117,6 +134,7 @@ export default function EmployeesPage() {
           position: form.position || null,
           phone: form.phone || null,
           role: form.role,
+          shift_id: form.shift_id || null,
         })
         .eq('id', editEmployee.id)
 
@@ -230,6 +248,10 @@ export default function EmployeesPage() {
                     <span>#</span>{emp.employee_code}
                   </p>
                 )}
+                <p className="employee-shift" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <span style={{ fontSize: '0.85rem' }}>🕒</span>
+                  <span>{shifts.find(s => s.id === emp.shift_id)?.name || 'Sin turno asignado'}</span>
+                </p>
               </div>
               <div className="employee-actions">
                 <button
@@ -374,6 +396,23 @@ export default function EmployeesPage() {
                     <option value="admin">Administrador</option>
                   </select>
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Turno de Trabajo</label>
+                <select
+                  id="emp-shift"
+                  className="form-select"
+                  value={form.shift_id}
+                  onChange={e => setForm({ ...form, shift_id: e.target.value })}
+                >
+                  <option value="">-- Sin turno asignado --</option>
+                  {shifts.map(shift => (
+                    <option key={shift.id} value={shift.id}>
+                      {shift.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {message && (

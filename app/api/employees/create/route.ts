@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   // Parse body
   const body = await request.json()
-  const { full_name, email, password, employee_code, department, position, phone, role } = body
+  const { full_name, email, password, employee_code, department, position, phone, role, shift_id } = body
 
   if (!full_name || !email || !password) {
     return NextResponse.json({ error: 'Nombre, email y contraseña son requeridos' }, { status: 400 })
@@ -49,6 +49,7 @@ export async function POST(request: Request) {
       position: position || null,
       phone: phone || null,
       role: role || 'employee',
+      shift_id: shift_id || null,
     })
     .eq('id', newUser.user!.id)
 
