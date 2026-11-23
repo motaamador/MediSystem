@@ -123,47 +123,52 @@ export default function EmployeesPage() {
     setSaving(true)
     setMessage(null)
 
-    if (editEmployee) {
-      // Update profile
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          full_name: form.full_name,
-          employee_code: form.employee_code || null,
-          department: form.department || null,
-          position: form.position || null,
-          phone: form.phone || null,
-          role: form.role,
-          shift_id: form.shift_id || null,
+    try {
+      if (editEmployee) {
+        // Update profile
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            full_name: form.full_name,
+            employee_code: form.employee_code || null,
+            department: form.department || null,
+            position: form.position || null,
+            phone: form.phone || null,
+            role: form.role,
+            shift_id: form.shift_id || null,
+          })
+          .eq('id', editEmployee.id)
+
+        if (error) {
+          setMessage({ type: 'error', text: error.message || 'Error al actualizar el empleado.' })
+        } else {
+          setMessage({ type: 'success', text: 'Empleado actualizado exitosamente.' })
+          await loadEmployees()
+          setTimeout(() => setShowModal(false), 1000)
+        }
+      } else {
+        // Create new user via Supabase admin API (uses service role on server)
+        const res = await fetch('/api/employees/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
         })
-        .eq('id', editEmployee.id)
+        const data = await res.json().catch(() => null)
 
-      if (error) {
-        setMessage({ type: 'error', text: 'Error al actualizar el empleado.' })
-      } else {
-        setMessage({ type: 'success', text: 'Empleado actualizado exitosamente.' })
-        await loadEmployees()
-        setTimeout(() => setShowModal(false), 1000)
+        if (!res.ok) {
+          setMessage({ type: 'error', text: data?.error || 'Error al crear el empleado.' })
+        } else {
+          setMessage({ type: 'success', text: 'Empleado creado exitosamente.' })
+          await loadEmployees()
+          setTimeout(() => setShowModal(false), 1000)
+        }
       }
-    } else {
-      // Create new user via Supabase admin API (uses service role on server)
-      const res = await fetch('/api/employees/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await res.json()
-
-      if (!res.ok) {
-        setMessage({ type: 'error', text: data.error || 'Error al crear el empleado.' })
-      } else {
-        setMessage({ type: 'success', text: 'Empleado creado exitosamente.' })
-        await loadEmployees()
-        setTimeout(() => setShowModal(false), 1000)
-      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Error inesperado al procesar la solicitud.'
+      setMessage({ type: 'error', text: errorMessage })
+    } finally {
+      setSaving(false)
     }
-
-    setSaving(false)
   }
 
   const toggleActive = async (emp: Profile) => {

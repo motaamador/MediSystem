@@ -39,10 +39,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: createError.message }, { status: 400 })
   }
 
-  // Update profile with additional data
+  // Upsert profile with complete data to avoid trigger race conditions
   const { error: profileError } = await adminSupabase
     .from('profiles')
-    .update({
+    .upsert({
+      id: newUser.user!.id,
       full_name,
       employee_code: employee_code || null,
       department: department || null,
@@ -51,9 +52,10 @@ export async function POST(request: Request) {
       role: role || 'employee',
       shift_id: shift_id || null,
     })
-    .eq('id', newUser.user!.id)
 
   if (profileError) {
+    // Rollback: clean up created auth user so it doesn't leave an orphan record
+    await adminSupabase.auth.admin.deleteUser(newUser.user!.id)
     return NextResponse.json({ error: profileError.message }, { status: 400 })
   }
 
